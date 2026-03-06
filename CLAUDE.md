@@ -72,3 +72,9 @@ mix format --check-formatted
 - [Phoenix Guides](https://hexdocs.pm/phoenix/overview.html)
 - [Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/welcome.html)
 - [Programming Phoenix LiveView](https://pragprog.com/titles/liveview/programming-phoenix-liveview/) (book)
+
+## Rules
+
+- DO NOT READ any .env files
+- NEVER read the .env files
+

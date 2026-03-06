@@ -1,0 +1,19 @@
+defmodule Pawzitively.Repo.Migrations.CreateOwners do
+  use Ecto.Migration
+
+  def change do
+    create table(:owners) do
+      add :first_name, :string, null: false
+      add :last_name, :string, null: false
+      add :email, :string, null: false
+      add :phone, :string, null: false
+      add :emergency_contact_name, :string
+      add :emergency_contact_phone, :string
+      add :notes, :text
+
+      timestamps(type: :utc_datetime)
+    end
+
+    create unique_index(:owners, [:email])
+  end
+end

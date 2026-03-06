@@ -18,6 +18,16 @@ defmodule PawzitivelyWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/owners", OwnerLive.Index, :index
+    live "/owners/new", OwnerLive.Form, :new
+    live "/owners/:id", OwnerLive.Show, :show
+    live "/owners/:id/edit", OwnerLive.Form, :edit
+
+    live "/pets", PetLive.Index, :index
+    live "/pets/new", PetLive.Form, :new
+    live "/pets/:id", PetLive.Show, :show
+    live "/pets/:id/edit", PetLive.Form, :edit
   end
 
   # Other scopes may use custom stacks.
