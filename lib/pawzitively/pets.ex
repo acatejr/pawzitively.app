@@ -7,6 +7,7 @@ defmodule Pawzitively.Pets do
   alias Pawzitively.Repo
 
   alias Pawzitively.Pets.Pet
+  alias Pawzitively.Owners.Owner
 
   @doc """
   Returns the list of pets.
@@ -18,7 +19,7 @@ defmodule Pawzitively.Pets do
 
   """
   def list_pets(opts \\ []) do
-    query = from(p in Pet, order_by: [asc: p.name], preload: [:owner])
+    query = from(p in Pet, order_by: [asc: p.name], preload: [:owners])
 
     query =
       case Keyword.get(opts, :search) do
@@ -56,9 +57,12 @@ defmodule Pawzitively.Pets do
 
   """
   def get_pet!(id) do
-    Pet
-    |> Repo.get!(id)
-    |> Repo.preload(:owner)
+    pet =
+      Pet
+      |> Repo.get!(id)
+      |> Repo.preload(:owners)
+
+    %{pet | owner_ids: Enum.map(pet.owners, & &1.id)}
   end
 
   @doc """
@@ -74,9 +78,16 @@ defmodule Pawzitively.Pets do
 
   """
   def create_pet(attrs) do
-    %Pet{}
-    |> Pet.changeset(attrs)
-    |> Repo.insert()
+    owners = fetch_owners(attrs)
+    changeset = Pet.changeset(%Pet{}, attrs)
+
+    if Enum.empty?(owners) do
+      {:error, Ecto.Changeset.add_error(changeset, :owner_ids, "must have at least one owner")}
+    else
+      changeset
+      |> Ecto.Changeset.put_assoc(:owners, owners)
+      |> Repo.insert()
+    end
   end
 
   @doc """
@@ -92,9 +103,17 @@ defmodule Pawzitively.Pets do
 
   """
   def update_pet(%Pet{} = pet, attrs) do
-    pet
-    |> Pet.changeset(attrs)
-    |> Repo.update()
+    pet = Repo.preload(pet, :owners)
+    owners = fetch_owners(attrs)
+    changeset = Pet.changeset(pet, attrs)
+
+    if Enum.empty?(owners) do
+      {:error, Ecto.Changeset.add_error(changeset, :owner_ids, "must have at least one owner")}
+    else
+      changeset
+      |> Ecto.Changeset.put_assoc(:owners, owners)
+      |> Repo.update()
+    end
   end
 
   @doc """
@@ -124,5 +143,29 @@ defmodule Pawzitively.Pets do
   """
   def change_pet(%Pet{} = pet, attrs \\ %{}) do
     Pet.changeset(pet, attrs)
+  end
+
+  defp fetch_owners(attrs) do
+    owner_ids =
+      (attrs["owner_ids"] || attrs[:owner_ids] || [])
+      |> Enum.map(fn
+        id when is_integer(id) -> id
+        id when is_binary(id) ->
+          case Integer.parse(id) do
+            {int, ""} -> int
+            _ -> nil
+          end
+
+        _ ->
+          nil
+      end)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.uniq()
+
+    if Enum.empty?(owner_ids) do
+      []
+    else
+      Repo.all(from o in Owner, where: o.id in ^owner_ids)
+    end
   end
 end

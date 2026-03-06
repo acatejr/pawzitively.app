@@ -8,15 +8,17 @@ defmodule Pawzitively.PetsFixtures do
   Generate a pet.
   """
   def pet_fixture(attrs \\ %{}) do
-    owner =
-      if attrs[:owner_id] do
-        nil
+    owner_ids =
+      if attrs[:owner_ids] do
+        attrs[:owner_ids]
       else
-        Pawzitively.OwnersFixtures.owner_fixture()
+        owner = Pawzitively.OwnersFixtures.owner_fixture()
+        [owner.id]
       end
 
     {:ok, pet} =
       attrs
+      |> Map.delete(:owner_ids)
       |> Enum.into(%{
         name: "Buddy",
         species: "Dog",
@@ -24,7 +26,7 @@ defmodule Pawzitively.PetsFixtures do
         date_of_birth: ~D[2020-06-15],
         weight: "30.5",
         spayed_neutered: true,
-        owner_id: (owner && owner.id) || attrs[:owner_id]
+        owner_ids: owner_ids
       })
       |> Pawzitively.Pets.create_pet()
 

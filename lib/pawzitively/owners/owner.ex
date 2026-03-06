@@ -11,7 +11,9 @@ defmodule Pawzitively.Owners.Owner do
     field :emergency_contact_phone, :string
     field :notes, :string
 
-    has_many :pets, Pawzitively.Pets.Pet
+    many_to_many :pets, Pawzitively.Pets.Pet,
+      join_through: "pet_owners",
+      on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end

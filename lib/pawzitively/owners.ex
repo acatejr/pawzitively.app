@@ -106,10 +106,12 @@ defmodule Pawzitively.Owners do
 
   """
   def delete_owner(%Owner{} = owner) do
-    owner = Repo.preload(owner, :pets)
+    owner = Repo.preload(owner, pets: :owners)
 
-    if Enum.any?(owner.pets) do
-      {:error, :has_associated_pets}
+    sole_owner_of_pet = Enum.any?(owner.pets, fn pet -> length(pet.owners) == 1 end)
+
+    if sole_owner_of_pet do
+      {:error, :sole_owner_of_pet}
     else
       Repo.delete(owner)
     end

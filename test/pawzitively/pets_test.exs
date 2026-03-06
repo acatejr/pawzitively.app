@@ -32,7 +32,7 @@ defmodule Pawzitively.PetsTest do
       fetched_pet = Pets.get_pet!(pet.id)
       assert fetched_pet.id == pet.id
       assert fetched_pet.name == pet.name
-      assert fetched_pet.owner != nil
+      assert fetched_pet.owners != []
     end
 
     test "create_pet/1 with valid data creates a pet" do
@@ -47,7 +47,7 @@ defmodule Pawzitively.PetsTest do
         medical_notes: "none",
         notes: "friendly",
         spayed_neutered: true,
-        owner_id: owner.id
+        owner_ids: [owner.id]
       }
 
       assert {:ok, %Pet{} = pet} = Pets.create_pet(valid_attrs)
@@ -59,7 +59,6 @@ defmodule Pawzitively.PetsTest do
       assert pet.medical_notes == "none"
       assert pet.notes == "friendly"
       assert pet.spayed_neutered == true
-      assert pet.owner_id == owner.id
     end
 
     test "create_pet/1 with invalid data returns error changeset" do
@@ -68,9 +67,10 @@ defmodule Pawzitively.PetsTest do
 
     test "update_pet/2 with valid data updates the pet" do
       pet = pet_fixture()
-      update_attrs = %{name: "Updated Name", species: "Cat", breed: "Siamese"}
+      loaded_pet = Pets.get_pet!(pet.id)
+      update_attrs = %{name: "Updated Name", species: "Cat", breed: "Siamese", owner_ids: loaded_pet.owner_ids}
 
-      assert {:ok, %Pet{} = pet} = Pets.update_pet(pet, update_attrs)
+      assert {:ok, %Pet{} = pet} = Pets.update_pet(loaded_pet, update_attrs)
       assert pet.name == "Updated Name"
       assert pet.species == "Cat"
       assert pet.breed == "Siamese"

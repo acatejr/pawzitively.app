@@ -16,11 +16,12 @@ defmodule PawzitivelyWeb.PetLive.Form do
 
       <.form for={@form} id="pet-form" phx-change="validate" phx-submit="save">
         <.input
-          field={@form[:owner_id]}
+          field={@form[:owner_ids]}
           type="select"
-          label="Owner"
+          label="Owners"
           options={@owner_options}
-          prompt="Select an owner"
+          prompt="Select owners"
+          multiple={true}
         />
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:species]} type="text" label="Species" />
@@ -65,7 +66,10 @@ defmodule PawzitivelyWeb.PetLive.Form do
   end
 
   defp apply_action(socket, :new, params) do
-    attrs = if params["owner_id"], do: %{owner_id: params["owner_id"]}, else: %{}
+    owner_ids =
+      if params["owner_id"], do: [String.to_integer(params["owner_id"])], else: []
+
+    attrs = %{owner_ids: owner_ids}
     pet = %Pet{}
 
     socket

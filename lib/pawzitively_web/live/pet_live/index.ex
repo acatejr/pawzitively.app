@@ -34,7 +34,9 @@ defmodule PawzitivelyWeb.PetLive.Index do
         <:col :let={{_id, pet}} label="Name">{pet.name}</:col>
         <:col :let={{_id, pet}} label="Species">{pet.species}</:col>
         <:col :let={{_id, pet}} label="Breed">{pet.breed}</:col>
-        <:col :let={{_id, pet}} label="Owner">{pet.owner.first_name} {pet.owner.last_name}</:col>
+        <:col :let={{_id, pet}} label="Owners">
+          {Enum.map_join(pet.owners, ", ", &"#{&1.first_name} #{&1.last_name}")}
+        </:col>
         <:action :let={{_id, pet}}>
           <div class="sr-only">
             <.link navigate={~p"/pets/#{pet}"}>Show</.link>

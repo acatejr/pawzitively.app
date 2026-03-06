@@ -80,12 +80,12 @@ defmodule PawzitivelyWeb.OwnerLive.Index do
       {:ok, _} ->
         {:noreply, stream_delete(socket, :owners, owner)}
 
-      {:error, :has_associated_pets} ->
+      {:error, :sole_owner_of_pet} ->
         {:noreply,
          put_flash(
            socket,
            :error,
-           "Cannot delete owner with associated pets. Please remove their pets first."
+           "Cannot delete owner: they are the sole owner of one or more pets. Assign another owner to those pets first."
          )}
     end
   end

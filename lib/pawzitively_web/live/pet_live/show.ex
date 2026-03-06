@@ -21,10 +21,12 @@ defmodule PawzitivelyWeb.PetLive.Show do
       </.header>
 
       <.list>
-        <:item title="Owner">
-          <.link navigate={~p"/owners/#{@pet.owner_id}"} class="link link-primary">
-            {@pet.owner.first_name} {@pet.owner.last_name}
-          </.link>
+        <:item title="Owners">
+          <span :for={owner <- @pet.owners}>
+            <.link navigate={~p"/owners/#{owner.id}"} class="link link-primary">
+              {owner.first_name} {owner.last_name}
+            </.link>
+          </span>
         </:item>
         <:item title="Species">{@pet.species}</:item>
         <:item title="Breed">{@pet.breed}</:item>

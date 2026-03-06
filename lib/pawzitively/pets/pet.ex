@@ -11,8 +11,11 @@ defmodule Pawzitively.Pets.Pet do
     field :medical_notes, :string
     field :notes, :string
     field :spayed_neutered, :boolean, default: false
+    field :owner_ids, {:array, :integer}, virtual: true
 
-    belongs_to :owner, Pawzitively.Owners.Owner
+    many_to_many :owners, Pawzitively.Owners.Owner,
+      join_through: "pet_owners",
+      on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
@@ -29,11 +32,9 @@ defmodule Pawzitively.Pets.Pet do
       :medical_notes,
       :notes,
       :spayed_neutered,
-      :owner_id
+      :owner_ids
     ])
-    |> validate_required([:name, :species, :owner_id])
+    |> validate_required([:name, :species])
     |> validate_number(:weight, greater_than: 0)
-    |> foreign_key_constraint(:owner_id)
-    |> assoc_constraint(:owner)
   end
 end
