@@ -16,7 +16,8 @@ serve:
 	mix phx.server
 
 test:
-	mix test
+# 	mix test
+	MIX_ENV=test mix test
 
 format:
 	mix format

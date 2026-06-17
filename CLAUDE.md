@@ -77,4 +77,6 @@ mix format --check-formatted
 
 - DO NOT READ any .env files
 - NEVER read the .env files
+- NEVER read the .env.example file
+
 

@@ -45,10 +45,16 @@ defmodule PawzitivelyWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
+            <a href={~p"/dashboard"} class="btn btn-ghost">Dashboard</a>
+          </li>
+          <li>
             <a href={~p"/owners"} class="btn btn-ghost">Owners</a>
           </li>
           <li>
             <a href={~p"/pets"} class="btn btn-ghost">Pets</a>
+          </li>
+          <li>
+            <a href={~p"/employees"} class="btn btn-ghost">Employees</a>
           </li>
           <li>
             <.theme_toggle />

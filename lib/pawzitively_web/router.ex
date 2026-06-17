@@ -19,6 +19,16 @@ defmodule PawzitivelyWeb.Router do
 
     get "/", PageController, :home
 
+    live "/dashboard", VisitLive.Dashboard, :index
+    live "/dashboard/check-in", VisitLive.CheckIn, :new
+    live "/dashboard/:id/check-out", VisitLive.CheckOut, :edit
+    live "/dashboard/:id/edit", VisitLive.Edit, :edit
+
+    live "/employees", EmployeeLive.Index, :index
+    live "/employees/new", EmployeeLive.Form, :new
+    live "/employees/:id", EmployeeLive.Show, :show
+    live "/employees/:id/edit", EmployeeLive.Form, :edit
+
     live "/owners", OwnerLive.Index, :index
     live "/owners/new", OwnerLive.Form, :new
     live "/owners/:id", OwnerLive.Show, :show
