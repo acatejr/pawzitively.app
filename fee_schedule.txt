@@ -1,0 +1,22 @@
+55 = 1 card
+110 = 2 cards
+165 = 3 cards
+220 = 4 cards
+275 = 5 cards
+
+1 card = 11 stamps
+1 stamp = 1 hour
+first hour = 2 stamps
+
+1 hr = $10
+2 hrs = $15
+3 hrs = $20
+4 hrs = $25
+5 hrs = $30
+6 hrs = $35
+7 hrs = $40
+8 hrs = $45
+9 hrs = $50
+
+$450 = monthly unlimited
+
